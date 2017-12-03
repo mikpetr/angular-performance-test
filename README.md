@@ -1,6 +1,19 @@
-# AngularPerformanceTest
+# Angular Performance Test
 
 ### Simple calendar application for demonstrating performance of Angular
+
+### For testing app performance do following
+```
+$ npm install -g @angular/cli
+
+$ npm install
+$ ng build -prod
+
+$ npm install -g http-server
+
+$ cd dist
+$ http-server
+```
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0.
 
