@@ -1,0 +1,24 @@
+.searching {
+  color: blue;
+  font-size: 10px;
+  padding-top: 6px; /* poor man's vertical centering */
+}
+.goodresults {
+  color: #090;
+  background: #efffef;
+}
+.result-label {
+  font-size: 8px;
+}
+.weakresults {
+  color: orange;
+  background: #ffffef;
+}
+.badresults {
+  color: red;
+  background: #ffefef;
+}
+:hover {
+  background-color: #559 !important;
+  color: white;
+}

@@ -1,0 +1,17 @@
+<div
+  [class.goodresults]="status.searchResults.options > 3"
+  [class.weakresults]="status.searchResults.options >= 1 && status.searchResults.options <= 3"
+  [class.badresults]="status.searchResults.options == 0"
+  [class.searching]="status.isSearching"
+  >
+  <div *ngIf="showSpinner()">
+    ...
+  </div>
+  <div *ngIf="showTime()" (click)="cellClicked()" class="time">
+    {{hour}}:00
+  </div>
+  <div *ngIf="showSearchResults()">
+    <div>{{status.searchResults.options}}</div>
+    <div class="result-label">results</div>
+  </div>
+</div>
