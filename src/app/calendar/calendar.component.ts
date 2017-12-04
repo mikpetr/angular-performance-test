@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RegistryService } from '../registry.service';
 import { CalendarCellComponent } from '../calendar-cell/calendar-cell.component';
 
@@ -7,24 +7,21 @@ import _ from 'lodash';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  styleUrls: ['./calendar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent implements OnInit {
 
-  private registryService: RegistryService;
   private hours: any;
   private days: any;
   public isLoaded: Boolean;
 
-  constructor(registryService: RegistryService) {
-    this.registryService = registryService;
+  constructor(private registryService: RegistryService) { }
 
+  ngOnInit() {
     this.hours = _.range(24);
     this.days = _.range(1, 32).map((day) => ("Oct " + day));
     this.isLoaded = false;
-  }
-
-  ngOnInit() {
   }
 
   load() {

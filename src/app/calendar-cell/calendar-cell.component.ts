@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RegistryService } from '../registry.service';
 
 function randomMilliseconds () {
@@ -9,14 +9,17 @@ function randomMilliseconds () {
   selector: 'app-calendar-cell',
   templateUrl: './calendar-cell.component.html',
   styleUrls: ['./calendar-cell.component.css'],
-  inputs: ['day', 'hour']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarCellComponent implements OnInit {
+  @Input() hour: number;
+  @Input() day: number;
+
   public status: any;
-  private registryService: RegistryService;
 
-  constructor(registryService: RegistryService) {
+  constructor(private registryService: RegistryService, private ref: ChangeDetectorRef) { }
 
+  ngOnInit() {
     this.status = {
       isSearching: false,
       searchResults: {
@@ -24,16 +27,14 @@ export class CalendarCellComponent implements OnInit {
       }
     };
 
-    registryService.addCell(this);
-  }
-
-  ngOnInit() {
+    this.registryService.addCell(this);
   }
 
   cellClicked() {
     let alreadySearching = this.status.isSearching;
     this.status.searchResults.options = null;
     this.status.isSearching = !alreadySearching;
+    this.ref.markForCheck();
 
     if (!alreadySearching) {
       // Simulate an AJAX request:
@@ -43,6 +44,7 @@ export class CalendarCellComponent implements OnInit {
       setTimeout(() => {
         this.status.isSearching = false;
         this.status.searchResults.options = Math.floor(Math.random() * 5);
+        this.ref.markForCheck();
       }, randomMilliseconds());
     }
   }
