@@ -1,10 +1,21 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  NgZone
+} from '@angular/core';
 import { RegistryService } from '../registry.service';
+import { share } from 'rxjs/operators';
+import { timer } from 'rxjs/observable/timer';
 
 function randomMilliseconds () {
   return Math.floor(Math.random() * 500);
 }
-
+const performanceOptimizer = timer(0).pipe(
+  share(),
+);
 @Component({
   selector: 'app-calendar-cell',
   templateUrl: './calendar-cell.component.html',
@@ -17,7 +28,8 @@ export class CalendarCellComponent implements OnInit {
 
   public status: any;
 
-  constructor(private registryService: RegistryService, private ref: ChangeDetectorRef) { }
+  constructor(private registryService: RegistryService,
+              private ref: ChangeDetectorRef, private zone: NgZone) { }
 
   ngOnInit() {
     this.status = {
@@ -34,7 +46,10 @@ export class CalendarCellComponent implements OnInit {
     let alreadySearching = this.status.isSearching;
     this.status.searchResults.options = null;
     this.status.isSearching = !alreadySearching;
-    this.ref.markForCheck();
+    this.zone.run(() => performanceOptimizer.subscribe(() => this.ref.detectChanges()));
+    // mark for check will check all component tree in next iteration, detectChanges will do it
+    // immediately only for this component and children
+    // this.ref.markForCheck();
 
     if (!alreadySearching) {
       // Simulate an AJAX request:
@@ -44,7 +59,7 @@ export class CalendarCellComponent implements OnInit {
       setTimeout(() => {
         this.status.isSearching = false;
         this.status.searchResults.options = Math.floor(Math.random() * 5);
-        this.ref.markForCheck();
+        this.ref.detectChanges();
       }, randomMilliseconds());
     }
   }
